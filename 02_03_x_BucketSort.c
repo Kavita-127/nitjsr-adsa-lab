@@ -1,3 +1,6 @@
+//SET-2
+//Q3 Implement the (x) Bucket Sort.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include<limits.h>
@@ -82,3 +85,4 @@ int main(){
     free(arr); free(buckets);
     return 0;
 }
+
