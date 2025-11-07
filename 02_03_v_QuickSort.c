@@ -1,3 +1,6 @@
+//SET-2
+//Q3 Implement the (ii) Quick Sort.
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -83,3 +86,4 @@ int main() {
     free(arr); // Free allocated memory
     return 0;
 }
+
