@@ -1,3 +1,6 @@
+//SET-2
+//Q3 Implement the (ii) bubble sort.
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -63,3 +66,4 @@ int main() {
     free(arr); // Free memory
     return 0;
 }
+
