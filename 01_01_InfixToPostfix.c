@@ -1,3 +1,7 @@
+/* SET 1 Q1. Implement a function to convert an infix arithmetic expression involving the operators +, -, /, *, (, ) and
+single digit constant integer operands to postfix expression. Assume usual precedence of operators in
+the order of /, *, + and -. Parentheses ( ) are used to override the precedence of operators. */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
@@ -100,4 +104,5 @@ int main(){
     free(postfix);
 
     return 0;
+
 }
