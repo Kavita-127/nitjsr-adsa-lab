@@ -1,5 +1,5 @@
 /* Write a C program to implement singly linked list with the operations for delection, insertion, searching and traversal.
-The program shuold include menu driven interface to allow users to perform the operations interactively.*/
+The program should include menu driven interface to allow users to perform the operations interactively.*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -121,3 +121,4 @@ int main() {
 
     return 0;
 }
+
