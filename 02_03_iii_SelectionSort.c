@@ -1,5 +1,5 @@
 //SET-2
-//Q3 Implement the (ii) Selection Sort
+//Q3 Implement the (iii) Selection Sort.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,4 +65,5 @@ int main() {
     free(arr);
     return 0;
 }
+
 
