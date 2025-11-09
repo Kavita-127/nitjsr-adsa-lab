@@ -1,3 +1,8 @@
+/* SET-3
+   Q8. Implement a stack using two queues by Method 1 (making EnQueue operation costly) and by Method 2
+       (making DeQueue operation costly in terms of time). */
+//METHOD 1
+
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 100
@@ -124,3 +129,4 @@ int main() {
     }
     return 0;
 }
+
