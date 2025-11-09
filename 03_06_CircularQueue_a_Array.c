@@ -1,3 +1,7 @@
+/* SET-3
+   Q6. Implement a Circular Queue using (a) an array .
+*/
+
 #include <stdio.h>
 #define SIZE 5   
 
@@ -99,3 +103,4 @@ int main() {
     }
     return 0;
 }
+
