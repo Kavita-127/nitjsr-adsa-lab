@@ -1,3 +1,7 @@
+/* SET-3
+   Q6. Implement a Circular Queue using (b) a linked list.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -112,3 +116,4 @@ int main() {
     }
     return 0;
 }
+
