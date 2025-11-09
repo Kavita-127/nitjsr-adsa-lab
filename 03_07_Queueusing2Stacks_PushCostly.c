@@ -1,3 +1,9 @@
+/* SET-3
+   Q7. Implement a queue using two stacks by Methods-1 (making Push operation costly in terms of time) and
+       by Method-2 (making Pop operation costly). */
+
+//METHOD-1 (Making Push operation costly)
+
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 100
@@ -122,3 +128,4 @@ int main() {
     }
     return 0;
 }
+
