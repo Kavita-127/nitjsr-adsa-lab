@@ -1,3 +1,7 @@
+/* SET-2 
+  Q4.  Implement merge sort without using recursion. You may use a stack data structure in order to keep track
+       of dividing and conquering the task. This will be a top-down approach of solving the problem. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -134,3 +138,4 @@ int main() {
     free(arr);
     return 0;
 }
+
