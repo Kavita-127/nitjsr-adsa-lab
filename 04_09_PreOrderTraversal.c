@@ -1,3 +1,6 @@
+/* SET-4
+   Q9. Implement the preorder traversal algorithm for binary trees without using recursion. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -86,3 +89,4 @@ int main() {
 
     return 0;
 }
+
