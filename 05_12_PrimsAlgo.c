@@ -1,3 +1,6 @@
+/* SET-5
+   Q12. Implement Prim’s algorithm for the minimum spanning tree problem. */
+
 #include <stdio.h>
 #include <limits.h>
 
@@ -74,3 +77,4 @@ int main() {
     primMST(graph, n);
     return 0;
 }
+
