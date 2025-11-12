@@ -1,260 +1,324 @@
+/*SET-4
+ Q10. Implement the functions createTree(), deleteTree(), insertItem(), deleteItem(), serachItem() for AVL
+      trees, i.e. height balanced binary search trees, red-black trees, B Trees and B+ Trees. */
+// B-TREE
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-// AVL Tree Node
-typedef struct AVLNode {
-    int key;
-    struct AVLNode *left;
-    struct AVLNode *right;
-    int height;
-} AVLNode;
+#define T 3   // Minimum degree of B-tree
 
-// Function to get the height of the node
-int height(AVLNode *node) {
-    if (node == NULL)
-        return 0;
-    return node->height;
-}
+struct BTreeNode {
+    int keys[2*T - 1];
+    struct BTreeNode* children[2*T];
+    int n;
+    bool leaf;
+};
 
-// Maximum of two integers
-int max(int a, int b) {
-    return (a > b) ? a : b;
-}
-
-// Create a new AVL node
-AVLNode* createNode(int key) {
-    AVLNode* node = (AVLNode*)malloc(sizeof(AVLNode));
-    node->key = key;
-    node->left = node->right = NULL;
-    node->height = 1; // New node is initially at leaf
+/* ---------------- CREATE TREE ---------------- */
+struct BTreeNode* createTree() {
+    struct BTreeNode* node = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+    node->leaf = true;
+    node->n = 0;
+    for (int i = 0; i < 2*T; i++)
+        node->children[i] = NULL;
     return node;
 }
 
-// Right rotate
-AVLNode* rightRotate(AVLNode *y) {
-    AVLNode *x = y->left;
-    AVLNode *T2 = x->right;
-
-    x->right = y;
-    y->left = T2;
-
-    y->height = max(height(y->left), height(y->right)) + 1;
-    x->height = max(height(x->left), height(x->right)) + 1;
-
-    return x;
+/* ---------------- DELETE TREE ---------------- */
+void deleteTree(struct BTreeNode* root) {
+    if (root == NULL) return;
+    if (!root->leaf)
+        for (int i = 0; i <= root->n; i++)
+            deleteTree(root->children[i]);
+    free(root);
 }
 
-// Left rotate
-AVLNode* leftRotate(AVLNode *x) {
-    AVLNode *y = x->right;
-    AVLNode *T2 = y->left;
-
-    y->left = x;
-    x->right = T2;
-
-    x->height = max(height(x->left), height(x->right)) + 1;
-    y->height = max(height(y->left), height(y->right)) + 1;
-
-    return y;
-}
-
-// Get balance factor
-int getBalance(AVLNode *node) {
-    if (node == NULL)
-        return 0;
-    return height(node->left) - height(node->right);
-}
-
-// Insert a key
-AVLNode* insertItem(AVLNode* node, int key) {
-    if (node == NULL)
-        return createNode(key);
-
-    if (key < node->key)
-        node->left = insertItem(node->left, key);
-    else if (key > node->key)
-        node->right = insertItem(node->right, key);
-    else
-        return node; // No duplicates allowed
-
-    node->height = 1 + max(height(node->left), height(node->right));
-
-    int balance = getBalance(node);
-
-    // Left Left
-    if (balance > 1 && key < node->left->key)
-        return rightRotate(node);
-
-    // Right Right
-    if (balance < -1 && key > node->right->key)
-        return leftRotate(node);
-
-    // Left Right
-    if (balance > 1 && key > node->left->key) {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
-    }
-
-    // Right Left
-    if (balance < -1 && key < node->right->key) {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
-    }
-
-    return node;
-}
-
-// Find node with minimum key
-AVLNode* minValueNode(AVLNode* node) {
-    AVLNode* current = node;
-    while (current->left != NULL)
-        current = current->left;
-    return current;
-}
-
-// Delete a key
-AVLNode* deleteItem(AVLNode* root, int key) {
-    if (root == NULL)
+/* ---------------- SEARCH ITEM ---------------- */
+struct BTreeNode* searchItem(struct BTreeNode* root, int key) {
+    if (root == NULL) return NULL;
+    int i = 0;
+    while (i < root->n && key > root->keys[i])
+        i++;
+    if (i < root->n && key == root->keys[i])
         return root;
+    if (root->leaf) return NULL;
+    return searchItem(root->children[i], key);
+}
 
-    if (key < root->key)
-        root->left = deleteItem(root->left, key);
-    else if (key > root->key)
-        root->right = deleteItem(root->right, key);
-    else {
-        if ((root->left == NULL) || (root->right == NULL)) {
-            AVLNode* temp = root->left ? root->left : root->right;
-            if (temp == NULL) {
-                temp = root;
-                root = NULL;
-            } else
-                *root = *temp;
-            free(temp);
-        } else {
-            AVLNode* temp = minValueNode(root->right);
-            root->key = temp->key;
-            root->right = deleteItem(root->right, temp->key);
+/* ------------------ HELPERS FOR INSERT ------------------ */
+void splitChild(struct BTreeNode* parent, int idx, struct BTreeNode* y) {
+    struct BTreeNode* z = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+    z->leaf = y->leaf;
+    z->n = T - 1;
+    for (int j = 0; j < T - 1; j++)
+        z->keys[j] = y->keys[j + T];
+    if (!y->leaf) {
+        for (int j = 0; j < T; j++)
+            z->children[j] = y->children[j + T];
+    }
+    y->n = T - 1;
+    for (int j = parent->n; j >= idx + 1; j--)
+        parent->children[j + 1] = parent->children[j];
+    parent->children[idx + 1] = z;
+    for (int j = parent->n - 1; j >= idx; j--)
+        parent->keys[j + 1] = parent->keys[j];
+    parent->keys[idx] = y->keys[T - 1];
+    parent->n++;
+}
+
+void insertNonFull(struct BTreeNode* x, int k) {
+    int i = x->n - 1;
+    if (x->leaf) {
+        while (i >= 0 && k < x->keys[i]) {
+            x->keys[i + 1] = x->keys[i];
+            i--;
         }
+        x->keys[i + 1] = k;
+        x->n++;
+    } else {
+        while (i >= 0 && k < x->keys[i]) i--;
+        if (x->children[i + 1]->n == 2*T - 1) {
+            splitChild(x, i + 1, x->children[i + 1]);
+            if (k > x->keys[i + 1]) i++;
+        }
+        insertNonFull(x->children[i + 1], k);
     }
+}
 
-    if (root == NULL)
+/* ---------------- INSERT ITEM (top-level) ---------------- */
+struct BTreeNode* insertItem(struct BTreeNode* root, int k) {
+    if (root == NULL) {
+        root = createTree();
+    }
+    if (root->n == 2*T - 1) {
+        struct BTreeNode* s = createTree();
+        s->leaf = false;
+        s->children[0] = root;
+        splitChild(s, 0, root);
+        int i = 0;
+        if (s->keys[0] < k) i++;
+        insertNonFull(s->children[i], k);
+        return s;
+    } else {
+        insertNonFull(root, k);
         return root;
+    }
+}
 
-    root->height = 1 + max(height(root->left), height(root->right));
+/* ------------------ HELPERS FOR DELETE ------------------ */
+int getPred(struct BTreeNode* node, int idx) {
+    struct BTreeNode* cur = node->children[idx];
+    while (!cur->leaf)
+        cur = cur->children[cur->n];
+    return cur->keys[cur->n - 1];
+}
 
-    int balance = getBalance(root);
+int getSucc(struct BTreeNode* node, int idx) {
+    struct BTreeNode* cur = node->children[idx + 1];
+    while (!cur->leaf)
+        cur = cur->children[0];
+    return cur->keys[0];
+}
 
-    // Left Left
-    if (balance > 1 && getBalance(root->left) >= 0)
-        return rightRotate(root);
+void mergeNodes(struct BTreeNode* node, int idx) {
+    struct BTreeNode* child = node->children[idx];
+    struct BTreeNode* sibling = node->children[idx + 1];
 
-    // Left Right
-    if (balance > 1 && getBalance(root->left) < 0) {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
+    child->keys[T - 1] = node->keys[idx];
+    for (int i = 0; i < sibling->n; i++)
+        child->keys[i + T] = sibling->keys[i];
+
+    if (!child->leaf) {
+        for (int i = 0; i <= sibling->n; i++)
+            child->children[i + T] = sibling->children[i];
     }
 
-    // Right Right
-    if (balance < -1 && getBalance(root->right) <= 0)
-        return leftRotate(root);
+    for (int i = idx + 1; i < node->n; i++)
+        node->keys[i - 1] = node->keys[i];
+    for (int i = idx + 2; i <= node->n; i++)
+        node->children[i - 1] = node->children[i];
 
-    // Right Left
-    if (balance < -1 && getBalance(root->right) > 0) {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
+    child->n += sibling->n + 1;
+    node->n--;
+    free(sibling);
+}
+
+void borrowFromPrev(struct BTreeNode* node, int idx) {
+    struct BTreeNode* child = node->children[idx];
+    struct BTreeNode* sibling = node->children[idx - 1];
+
+    for (int i = child->n - 1; i >= 0; i--)
+        child->keys[i + 1] = child->keys[i];
+    if (!child->leaf) {
+        for (int i = child->n; i >= 0; i--)
+            child->children[i + 1] = child->children[i];
+    }
+    child->keys[0] = node->keys[idx - 1];
+    if (!child->leaf)
+        child->children[0] = sibling->children[sibling->n];
+    node->keys[idx - 1] = sibling->keys[sibling->n - 1];
+    child->n += 1;
+    sibling->n -= 1;
+}
+
+void borrowFromNext(struct BTreeNode* node, int idx) {
+    struct BTreeNode* child = node->children[idx];
+    struct BTreeNode* sibling = node->children[idx + 1];
+
+    child->keys[child->n] = node->keys[idx];
+    if (!child->leaf)
+        child->children[child->n + 1] = sibling->children[0];
+    node->keys[idx] = sibling->keys[0];
+
+    for (int i = 1; i < sibling->n; i++)
+        sibling->keys[i - 1] = sibling->keys[i];
+    if (!sibling->leaf) {
+        for (int i = 1; i <= sibling->n; i++)
+            sibling->children[i - 1] = sibling->children[i];
     }
 
+    child->n += 1;
+    sibling->n -= 1;
+}
+
+void fill(struct BTreeNode* node, int idx) {
+    if (idx != 0 && node->children[idx - 1]->n >= T)
+        borrowFromPrev(node, idx);
+    else if (idx != node->n && node->children[idx + 1]->n >= T)
+        borrowFromNext(node, idx);
+    else {
+        if (idx != node->n)
+            mergeNodes(node, idx);
+        else
+            mergeNodes(node, idx - 1);
+    }
+}
+
+void deleteFromNode(struct BTreeNode* node, int k) {
+    int idx = 0;
+    while (idx < node->n && node->keys[idx] < k)
+        idx++;
+
+    if (idx < node->n && node->keys[idx] == k) {
+        if (node->leaf) {
+            for (int i = idx + 1; i < node->n; i++)
+                node->keys[i - 1] = node->keys[i];
+            node->n--;
+        } else {
+            if (node->children[idx]->n >= T) {
+                int pred = getPred(node, idx);
+                node->keys[idx] = pred;
+                deleteFromNode(node->children[idx], pred);
+            } else if (node->children[idx + 1]->n >= T) {
+                int succ = getSucc(node, idx);
+                node->keys[idx] = succ;
+                deleteFromNode(node->children[idx + 1], succ);
+            } else {
+                mergeNodes(node, idx);
+                deleteFromNode(node->children[idx], k);
+            }
+        }
+    } else {
+        if (node->leaf) return;
+        bool flag = (idx == node->n);
+        if (node->children[idx]->n < T)
+            fill(node, idx);
+        if (flag && idx > node->n)
+            deleteFromNode(node->children[idx - 1], k);
+        else
+            deleteFromNode(node->children[idx], k);
+    }
+}
+
+/* ---------------- DELETE ITEM (top-level) ---------------- */
+struct BTreeNode* deleteItem(struct BTreeNode* root, int k) {
+    if (root == NULL) return NULL;
+    deleteFromNode(root, k);
+    if (root->n == 0) {
+        struct BTreeNode* tmp = root;
+        if (root->leaf)
+            root = NULL;
+        else
+            root = root->children[0];
+        free(tmp);
+    }
     return root;
 }
 
-// Search for a key
-AVLNode* searchItem(AVLNode* root, int key) {
-    if (root == NULL || root->key == key)
-        return root;
-    if (key < root->key)
-        return searchItem(root->left, key);
-    return searchItem(root->right, key);
-}
-
-// Delete entire tree
-void deleteTree(AVLNode* node) {
-    if (node == NULL)
-        return;
-    deleteTree(node->left);
-    deleteTree(node->right);
-    free(node);
-}
-
-// Print level order
-void printLevelOrder(AVLNode* root) {
-    if (root == NULL) return;
-
-    AVLNode* queue[1000];
-    int front = 0, rear = 0;
-    queue[rear++] = root;
-    int level = 1;
-
-    while (front < rear) {
-        int nodeCount = rear - front;
-        printf("Level %d: ", level++);
-        for (int i = 0; i < nodeCount; i++) {
-            AVLNode* node = queue[front++];
-            printf("%d ", node->key);
-            if (node->left != NULL)
-                queue[rear++] = node->left;
-            if (node->right != NULL)
-                queue[rear++] = node->right;
-        }
-        printf("\n");
+/* --------------- INORDER DISPLAY (top-level) --------------- */
+void inorder(struct BTreeNode* node) {
+    if (node == NULL) return;
+    int i;
+    for (i = 0; i < node->n; i++) {
+        if (!node->leaf)
+            inorder(node->children[i]);
+        printf("%d ", node->keys[i]);
     }
+    if (!node->leaf)
+        inorder(node->children[i]);
 }
 
-// Create tree
-AVLNode* createTree() {
-    return NULL;
-}
-
-// Main program
+/* ---------------- MAIN MENU ---------------- */
 int main() {
-    AVLNode* root = createTree();
+    struct BTreeNode* root = createTree();
     int choice, key;
-    
-    printf("\nAVL Tree Operations:\n");
-    printf("1. Insert\n2. Delete\n3. Search\n4. Display Level Order\n5. Delete Tree & Exit\n");
+
     while (1) {
-        printf("Enter your choice: ");
-        if (scanf("%d", &choice) != 1) { // Input validation
-            while (getchar() != '\n');
-            printf("Invalid input! Try again.\n");
-            continue;
+        printf("\n--- B-Tree Menu ---\n");
+        printf("1. Insert\n2. Delete\n3. Search\n4. Display (in-order)\n5. Delete Tree\n6. Exit\n");
+        printf("Enter choice: ");
+        if (scanf("%d", &choice) != 1) {
+            // handle non-integer input
+            printf("Invalid input. Exiting.\n");
+            break;
         }
+
+        if (choice == 6) {
+            deleteTree(root);
+            printf("Exiting program.\n");
+            break;
+        }
+
         switch (choice) {
             case 1:
                 printf("Enter key to insert: ");
-                if (scanf("%d", &key) != 1) { while (getchar() != '\n'); printf("Invalid input!\n"); break; }
+                scanf("%d", &key);
                 root = insertItem(root, key);
+                printf("Inserted %d.\n", key);
                 break;
+
             case 2:
                 printf("Enter key to delete: ");
-                if (scanf("%d", &key) != 1) { while (getchar() != '\n'); printf("Invalid input!\n"); break; }
+                scanf("%d", &key);
                 root = deleteItem(root, key);
+                printf("Deleted %d (if existed).\n", key);
                 break;
+
             case 3:
                 printf("Enter key to search: ");
-                if (scanf("%d", &key) != 1) { while (getchar() != '\n'); printf("Invalid input!\n"); break; }
-                AVLNode* found = searchItem(root, key);
-                if (found) printf("Key %d found.\n", key);
-                else printf("Key %d not found.\n", key);
+                scanf("%d", &key);
+                if (searchItem(root, key))
+                    printf("Key %d found.\n", key);
+                else
+                    printf("Key %d not found.\n", key);
                 break;
+
             case 4:
-                printLevelOrder(root);
+                printf("B-Tree contents (in-order): ");
+                inorder(root);
+                printf("\n");
                 break;
+
             case 5:
                 deleteTree(root);
-                printf("Tree deleted. Exiting.\n");
-                exit(0);
+                root = createTree();
+                printf("Tree cleared.\n");
+                break;
+
             default:
-                printf("Invalid choice! Try again.\n");
+                printf("Invalid choice.\n");
         }
     }
     return 0;
