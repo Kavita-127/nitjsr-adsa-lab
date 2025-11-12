@@ -1,3 +1,6 @@
+/* SET-5 
+   Q13. Implement Kruskal’s algorithm for the minimum spanning tree problem. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -107,3 +110,4 @@ int main() {
     kruskalMST(graph, n);
     return 0;
 }
+
