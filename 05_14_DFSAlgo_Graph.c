@@ -1,3 +1,7 @@
+/* SET-5
+   Q14. Implement DFS algorithms for graphs. Your function should be able to identify all the tree edges, back
+edges, forward edges and cross edges.*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -80,3 +84,4 @@ int main() {
 
     return 0;
 }
+
