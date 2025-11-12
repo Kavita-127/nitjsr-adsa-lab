@@ -1,3 +1,6 @@
+/* SET-5
+   Q11. Implement Dijkstra’s algorithm for the shortest path problem. */
+
 #include <stdio.h>
 #include <limits.h>
 
@@ -78,3 +81,4 @@ int main() {
     dijkstra(graph, src, n);
     return 0;
 }
+
