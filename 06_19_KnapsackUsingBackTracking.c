@@ -1,3 +1,6 @@
+/* SET-6
+   Q19. Implement the 0/1 knapsack problem using the backtracking method. */
+
 #include <stdio.h>
 
 // Function to return the maximum of two numbers
@@ -56,3 +59,4 @@ int main() {
 
     return 0;
 }
+
