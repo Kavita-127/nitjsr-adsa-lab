@@ -1,3 +1,6 @@
+/* SET-7
+   Q26. Write a function to perform topological sort on a given directed graph. */
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -58,3 +61,4 @@ int main() {
 
     return 0;
 }
+
