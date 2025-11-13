@@ -1,3 +1,7 @@
+/* SET-7
+   Q28. Write a program for determining whether a graph with n vertices and e edges contains a clique of size m
+(m ≤ n). Check for what values of n, e, and m your program gives output in reasonable time. */ 
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -83,3 +87,4 @@ int main() {
 
     return 0;
 }
+
