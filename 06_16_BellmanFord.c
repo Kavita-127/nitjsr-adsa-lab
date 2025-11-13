@@ -1,3 +1,6 @@
+/* SET-6
+   Q16. Implement Bellman Ford algorithm for the shortest path problem. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -71,3 +74,4 @@ int main() {
     free(edges);
     return 0;
 }
+
