@@ -1,3 +1,6 @@
+/* SET-6
+   Q18. Implement the 0/1 knapsack problem using the dynamic programming. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -62,3 +65,4 @@ int main() {
 
     return 0;
 }
+
