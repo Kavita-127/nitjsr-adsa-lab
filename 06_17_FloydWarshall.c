@@ -1,3 +1,7 @@
+/* SET-6
+   Q17. Implement dynamic programming algorithm of Floyd–Warshall algorithm 
+        for the shortest path problem. */
+
 #include <stdio.h>
 #define INF 99999
 #define MAX 100
@@ -56,3 +60,4 @@ int main() {
 
     return 0;
 }
+
