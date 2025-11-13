@@ -1,3 +1,6 @@
+/* SET-7
+   Q22. Implement the coin changing problem using the greedy method. */
+
 #include <stdio.h>
 
 // Function to implement Greedy Coin Change
@@ -41,3 +44,4 @@ int main() {
 
     return 0;
 }
+
