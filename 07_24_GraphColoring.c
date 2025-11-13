@@ -1,3 +1,6 @@
+/* SET-7
+   Q24. Implement the graph coloring problem using the backtracking method. */
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -72,3 +75,4 @@ int main() {
 
     return 0;
 }
+
