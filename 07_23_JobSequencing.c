@@ -1,3 +1,7 @@
+/*SET-7
+  Q23. Write a function to implement the job sequencing with deadline problem in which each job has integer
+deadline and unit processing time. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -71,3 +75,4 @@ int main() {
 
     return 0;
 }
+
