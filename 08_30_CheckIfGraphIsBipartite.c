@@ -1,3 +1,6 @@
+/* SET-7
+   Q30. Write a program for determining whether a graph with n vertices and e edges is a bipartite graph. */
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -76,3 +79,4 @@ int main() {
 
     return 0;
 }
+
