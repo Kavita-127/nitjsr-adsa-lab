@@ -1,3 +1,6 @@
+/* SET-6
+   Q20. Implement the n-queens problem using the backtracking method. */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -78,3 +81,4 @@ int main() {
 
     return 0;
 }
+
