@@ -1,3 +1,7 @@
+/* SET-7
+   Q25. Write functions to identify all the strongly connected components, biconnected components, articulation
+points and bridges in a given directed graph.*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -126,3 +130,4 @@ int main() {
 
     return 0;
 }
+
