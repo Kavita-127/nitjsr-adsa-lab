@@ -1,3 +1,6 @@
+/* SET-6
+   Q21. Implement the 15-puzzle problem using the branch and bound method. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -196,3 +199,4 @@ int main() {
 
     return 0;
 }
+
