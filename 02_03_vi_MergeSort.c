@@ -1,3 +1,9 @@
+/* SET-2
+   Q3.Implement the (i) insertion sort, (ii) bubble sort, (iii) selection sort, (iv) shell sort, (v) quick sort, (vi)
+      merge sort, (vii) heap sort, (viii) radix sort, (ix) counting sort, (x) bucket sort, (xi) radix exchange sort,
+      and (xii) address calculation sort. */
+// MERGE SORT
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -98,3 +104,4 @@ int main() {
     free(arr); // Free main array
     return 0;
 }
+
