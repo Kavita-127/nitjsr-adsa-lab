@@ -1,3 +1,7 @@
+/* SET-9
+   Q33. Implement Boyer-Moore string matching Algorithm.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -5,7 +9,6 @@
 
 #define ALPHABET 256
 
-// Preprocessing for the bad character rule
 void buildBadChar(const char *pat, int m, int badChar[]) {
     for (int i = 0; i < ALPHABET; i++)
         badChar[i] = -1;
@@ -14,7 +17,6 @@ void buildBadChar(const char *pat, int m, int badChar[]) {
         badChar[(unsigned char)pat[i]] = i;
 }
 
-// Preprocessing for the good suffix rule
 void buildGoodSuffix(const char *pat, int m, int *suffix, int *goodSuffix) {
     int i = m - 1, j = m;
 
@@ -86,3 +88,4 @@ int main() {
     boyerMoore(text, pattern);
     return 0;
 }
+
