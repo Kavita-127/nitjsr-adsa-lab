@@ -1,3 +1,8 @@
+/*SET-9
+  Q34. Implement Graham scan algorithm or Jarvis March algorithm to find a convex hull of a set of N points
+       whose coordinates are given as (x1, y1), (x2, y2), … ,(xn, yn). 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,19 +12,16 @@ typedef struct {
 
 Point P0;   // global reference point
 
-// Utility: next to top in stack
 Point nextToTop(Point* stack, int top) {
     return stack[top - 1];
 }
 
-// Swap two points
 void swap(Point* a, Point* b) {
     Point temp = *a;
     *a = *b;
     *b = temp;
 }
 
-// Orientation test
 int orientation(Point a, Point b, Point c) {
     long long val = (long long)(b.y - a.y) * (c.x - b.x) -
                     (long long)(b.x - a.x) * (c.y - b.y);
@@ -44,7 +46,7 @@ int compare(const void* p1, const void* p2) {
         // Keep farthest point last
         return (distSq(P0, b) >= distSq(P0, a)) ? -1 : 1;
     }
-    return (o == 2) ? -1 : 1; // a before b if counter-clockwise
+    return (o == 2) ? -1 : 1; 
 }
 
 // Graham Scan Convex Hull
@@ -96,7 +98,6 @@ void convexHull(Point points[], int n) {
         printf("(%d, %d)\n", stack[i].x, stack[i].y);
 }
 
-// Example usage
 int main() {
     Point points[] = {{0,3},{2,3},{1,1},{2,1},{3,0},
                       {0,0},{3,3}};
@@ -105,3 +106,4 @@ int main() {
     convexHull(points, n);
     return 0;
 }
+
