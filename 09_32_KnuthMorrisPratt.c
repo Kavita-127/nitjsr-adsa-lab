@@ -1,3 +1,7 @@
+/* SET-9
+   Q32. Implement Knuth-Morris-Pratt string matching Algorithm.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -68,3 +72,4 @@ int main() {
 
     return 0;
 }
+
