@@ -1,3 +1,8 @@
+/*SET-9
+  Q34. Implement Graham scan algorithm or Jarvis March algorithm to find a convex hull of a set of N points
+        whose coordinates are given as (x1, y1), (x2, y2), … ,(xn, yn).
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -5,11 +10,6 @@ typedef struct {
     int x, y;
 } Point;
 
-// Function to find orientation of ordered triplet (a,b,c)
-// Returns:
-// 0 -> collinear
-// 1 -> clockwise
-// 2 -> counter-clockwise
 int orientation(Point a, Point b, Point c) {
     long long val = (long long)(b.y - a.y) * (c.x - b.x) -
                     (long long)(b.x - a.x) * (c.y - b.y);
@@ -24,7 +24,7 @@ void jarvisMarch(Point points[], int n) {
         return;
     }
 
-    int *hull = (int*)malloc(n * sizeof(int)); // store indices of hull points
+    int *hull = (int*)malloc(n * sizeof(int));
     int hull_size = 0;
 
     // Step 1: Find the leftmost point
@@ -39,7 +39,7 @@ void jarvisMarch(Point points[], int n) {
     // Step 2: Wrap around the points
     do {
         hull[hull_size++] = p;
-        int q = (p + 1) % n; // next candidate
+        int q = (p + 1) % n;
 
         for (int i = 0; i < n; i++) {
             if (orientation(points[p], points[i], points[q]) == 2) {
@@ -60,7 +60,6 @@ void jarvisMarch(Point points[], int n) {
 }
 
 int main() {
-    // Example points
     Point points[] = {{0,3},{2,3},{1,1},{2,1},{3,0},{0,0},{3,3}};
     int n = sizeof(points) / sizeof(points[0]);
 
@@ -68,3 +67,4 @@ int main() {
 
     return 0;
 }
+
